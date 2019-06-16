@@ -1,0 +1,9 @@
+﻿## Interface: 20300
+## Title: Drawf Love Tauren
+## Notes: Let you talk between Alligance and Horde.
+## Notes-zhCN: 打破联盟部落之间的沉默.
+## Author: Antiwintercold(cwow.grunt5.Itharius.tgsy)
+loc_enUS.lua
+loc_zhCN.lua
+DLT.xml
+DLT.lua
