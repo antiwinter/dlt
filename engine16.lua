@@ -73,6 +73,8 @@ dict = {
         local s = ''
         local lut = dict.set1
 
+        msg = '\\<' .. msg .. '\\>'
+
         for i = 1, string.len(msg) do
             local asc = msg:byte(i)
 
