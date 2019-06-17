@@ -1,61 +1,77 @@
 dict = {
     mark1 = '[Dwarlorahe]',
-    mark = {'iffjwoi', 'fiwjoef'},
 
     alliance = {
-        {
+        mark2 = 'fiofwof',
+        tongue = {
             'a', 'c', 'i', 'm', 'l', 'ab', 'ag', 'bw', 'AB', 'AG', 'bo', 'ch',
             'bf', 'BO', 'CH', 'BF'
-        }, {
+        },
+        ear = {
             'G', 'O', 'L', 'A', 'N', 'Ha', 'Gi', 'Mu', 'HA', 'GI', 'Ka', 'No',
             'Ko', 'KA', 'NO', 'KO'
         }
     },
 
     horde = {
-        {
+        mark2 = 'fwiewf',
+        tongue = {
             'e', 'a', 'p', 'z', 'ba', 'ag', 'BA', 'AG', 'ac', 'am', 'ao', 'ap',
             'AC', 'AM', 'AO', 'AP'
-        }, {
+        },
+        ear = {
             'Y', 'O', 'U', 'E', 'Ti', 'Me', 'TI', 'ME', 'Lo', 'Ve', 'An', 'Se',
             'LO', 'VE', 'AN', 'SE'
         }
     },
 
-    init = function(lang)
-        if lang == dlt.lang.common then
-            dict.mark2 = dict[1]
-            dict.set1 = dict.alliance[1]
-            dict.set2 = dict.alliance[2]
-        else
-            dict.mark2 = dict[2]
-            dict.set1 = dict.horde[1]
-            dict.set2 = dict.horde[2]
-        end
+    init = function(faction)
+        dict.mark2 = dict[faction].mark2
+        dict.set1 = dict[faction].tongue
+        dict.set2 = dict[faction].ear
 
         for k, v in pairs(dict.set1) do dict.set1[v] = k end
         for k, v in pairs(dict.set2) do dict.set2[v] = k end
     end,
 
     from = function(msg)
-        local lut
+        local lut = nil
         local hex, flag = 0, nil
 
-        if string.find(msg, dict.mark1) then
+        -- print('hear msg', msg)
+        -- print('finding', dict.mark1)
+
+        _1, _2 = msg:find(dict.mark1)
+        -- print('_1_2', _1, _2)
+
+        if msg:find(dict.mark1) then
+            -- print('xxx')
             lut = dict.set1
-        elseif string.find(msg, dict.mark2) then
+        elseif msg:find(dict.mark2) then
             lut = dict.set2
         end
 
+        -- print('dict', dict.mark2, dict.set1, dict.set2)
+
+        if not lut then return nil end
+        -- print('lut found', lut)
+
         local d = ''
-        for i, w in paris(string.gmatch(msg, '%a+')) do
-            if i ~= 1 then
+
+        -- print('from msg', msg)
+        local skip = nil
+        for w in msg:gmatch('[%a%w]+') do
+            if not skip then
+                skip = 1
+            else
+                -- print('word', w)
                 if lut[w] == nil then return nil end
 
                 hex = (hex << 4) | (lut[w] - 1)
 
                 if flag then
                     d = d .. string.char(hex)
+                    -- print('tr w', string.format('%02x', hex), string.char(hex))
                     hex = 0
                     flag = nil
                 else
@@ -63,6 +79,8 @@ dict = {
                 end
             end
         end
+
+        -- print('translate to', d, flag)
 
         if flag then return nil end
         return d
@@ -75,17 +93,25 @@ dict = {
 
         msg = '\\<' .. msg .. '\\>'
 
-        for i = 1, string.len(msg) do
+        -- print('to msg', msg)
+
+        for i = 1, msg:len() do
             local asc = msg:byte(i)
 
-            s = s .. ' ' .. lut[(asc & 0xf) + 1]
-            asc = asc >> 4
-            s = s .. ' ' .. lut[asc + 1]
+            -- print('sending', msg:sub(i, i), string.format('%02x', asc))
 
-            if string.len(s) > 200 then
-                d.insert(dict.mark1 .. s)
+            s = s .. ' ' .. lut[(asc >> 4) + 1]
+            s = s .. ' ' .. lut[(asc & 0xf) + 1]
+
+            if s:len() > 200 then
+                table.insert(d, dict.mark1 .. s)
                 s = ''
             end
         end
+
+        -- print('d??', d)
+        if s ~= '' then table.insert(d, dict.mark1 .. s) end
+
+        return d
     end
 }

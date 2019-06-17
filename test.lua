@@ -20,6 +20,8 @@ function SendChatMessage(msg)
     event = 'CHAT_MSG_SAY'
     arg1 = msg
     arg2 = 'antiwinter'
+
+    ChatFrame_OnEvent()
 end
 
 require 'engine16'
@@ -28,4 +30,14 @@ require 'local'
 
 -- begin test
 dlt.init()
-dlt.say('123')
+
+data = {
+    '123', 'The quick brown fox jumps over the lazy dog!!',
+    '从前有个山，山里有个洞',
+    '这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong. 这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.'
+}
+
+for _, v in pairs(data) do
+    print('sending', v:len(), v)
+    dlt.cli(v)
+end
