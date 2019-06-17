@@ -10,6 +10,12 @@ ChatFrame1 = {
     end
 }
 SlashCmdList = {}
+bit = {
+    lshift = function(a, b) return a << b end,
+    rshift = function(a, b) return a >> b end,
+    band = function(a, b) return a & b end,
+    bor = function(a, b) return a | b end
+}
 
 function GetDefaultLanguage() return 'Common' end
 function GetLocale() return 'enUS' end
@@ -26,12 +32,13 @@ function SendChatMessage(msg)
     ChatFrame_OnEvent()
 end
 
-require 'engine16'
-require 'main'
+require 'engineY'
 require 'local'
+require 'main'
 
 -- begin test
 dlt.init()
+dlt.gen()
 
 data = {
     '123', 'The quick brown fox jumps over the lazy dog!!',
@@ -44,4 +51,4 @@ for _, v in pairs(data) do
     dlt.cli(v)
 end
 
-dlt.cli('test')
+for i = 1, 936 do dlt.cli('test') end

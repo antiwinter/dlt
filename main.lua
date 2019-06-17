@@ -121,7 +121,7 @@ dlt = {
     end,
 
     test = function()
-        local n = table.getn(dlt.data)
+        local n = #dlt.data
         print(g9998, n)
         if g9998 > n then return end
 
