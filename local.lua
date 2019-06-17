@@ -1,8 +1,7 @@
 if (GetLocale() == "zhCN") then
-    dlt.locale = {common = '通用语'}
-
+    dltLocal = {common = '通用语'}
 else
-    dlt.locale = {common = 'Common'}
-
-    print('initing local')
+    dltLocal = {common = 'Common'}
 end
+
+print('in local, dltLocal is', dltLocal)

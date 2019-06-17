@@ -1,10 +1,14 @@
+g9999 = 0
+g9998 = 1
 dlt = {
     _event = ChatFrame_OnEvent,
     lang = '',
-    locale = '',
     cache = {},
 
-    rgb = function(x, s) return string.format('|c%08x%s|r', x, s) end,
+    rgb = function(x, s)
+        return s
+        --  return string.format('|c%08x%s|r', x, s) 
+    end,
 
     log = function(msg)
         ChatFrame1:AddMessage(dlt.rgb(0x6666aa00, '[DLT]') ..
@@ -40,23 +44,29 @@ dlt = {
         end
     end,
 
-    filter = function()
-        -- dlt.log('filter event', event, arg1, arg2)
-        if event ~= 'CHAT_MSG_SAY' then return end
+    filter = function(...)
 
-        local c = dict.from(arg1)
-        -- print('filter got', c)
-        if c then
-            dlt.queue(arg2, c)
-        else
-            -- print('triggering default event')
-            dlt._event()
+        local _, event, msg, user = ...
+        if event == 'CHAT_MSG_SAY' then
+
+            -- for k, v in pairs({...}) do print(k, v) end
+
+            local c = dict.from(msg)
+            print('filter got', c)
+            if c then
+                dlt.queue(user, c)
+                -- return
+            end
         end
+
+        dlt._event(...)
+
     end,
 
     say = function(msg) SendChatMessage(msg, 'say', dlt.lang) end,
 
-    test = function()
+    gen = function()
+
         local g = function(n)
             local z = 0
             if n < 10 then
@@ -94,23 +104,34 @@ dlt = {
         }) do p(v) end
         p()
 
-        for i = 0, 255 do p(string.char(i)) end
+        -- for i = 0, 255 do p(string.char(i)) end
+        -- p()
+
+        for i = 0, 35 do for j = 0, 35 do p(g(i) .. g(j)) end end
         p()
 
-        for i = 0, 61 do for j = 0, 61 do p(g(i) .. g(j)) end end
-        p()
-
-        for i = 0, 61 do
-            for j = 0, 61 do
-                for k = 0, 61 do p(g(i) .. g(j) .. g(k)) end
+        for i = 0, 35 do
+            for j = 0, 35 do
+                for k = 0, 35 do p(g(i) .. g(j) .. g(k)) end
             end
         end
         p()
 
-        for _, v in pairs(x) do dlt.say(v) end
+        dlt.data = x
+    end,
+
+    test = function()
+        local n = table.getn(dlt.data)
+        print(g9998, n)
+        if g9998 > n then return end
+
+        -- print(dlt.data[g9998])
+        dlt.say(dlt.data[g9998])
+        g9998 = g9998 + 1
     end,
 
     cli = function(cmd)
+        print("in dlt cli", cmd)
         if cmd == '' or cmd == nil then
             return
         elseif cmd == 'test' then
@@ -121,12 +142,31 @@ dlt = {
     end,
 
     init = function()
+        print('in init')
         ChatFrame_OnEvent = dlt.filter
-        SlashCmdList['dlt'] = dlt.cli
+        print('in 1')
+
+        SlashCmdList['DLT'] = dlt.cli
         SLASH_DLT1 = '/dlt'
+        print('in 2')
 
         dlt.lang = GetDefaultLanguage('player')
-        dict.init(dlt.lang == dlt.locale.common and 'alliance' or 'horde')
+        print('in 3', dlt.lang, dltLocal.common)
+        print('dict is', dict)
+        dict.init(dlt.lang == dltLocal.common and 'alliance' or 'horde')
+        print('in 4')
+
         dlt.log('inited')
+
+        print('inited')
     end
 }
+
+print('in')
+
+print('0x36 >> 4 is', bit.rshift(0x36, 4))
+
+print('version is', _VERSION)
+
+dlt.init()
+dlt.gen()

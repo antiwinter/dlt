@@ -26,6 +26,7 @@ dict = {
     },
 
     init = function(faction)
+        print('in dict', faction)
         dict.mark2 = dict[faction].mark2
         dict.set1 = dict[faction].tongue
         dict.set2 = dict[faction].ear
@@ -41,7 +42,7 @@ dict = {
         -- print('hear msg', msg)
         -- print('finding', dict.mark1)
 
-        _1, _2 = msg:find(dict.mark1)
+        -- _1, _2 = msg:find(dict.mark1)
         -- print('_1_2', _1, _2)
 
         if msg:find(dict.mark1) then
@@ -64,10 +65,10 @@ dict = {
             if not skip then
                 skip = 1
             else
-                -- print('word', w)
+                -- print('word', w, lut[w])
                 if lut[w] == nil then return nil end
 
-                hex = (hex << 4) | (lut[w] - 1)
+                hex = bit.bor(bit.lshift(hex, 4), (lut[w] - 1))
 
                 if flag then
                     d = d .. string.char(hex)
@@ -82,7 +83,7 @@ dict = {
 
         -- print('translate to', d, flag)
 
-        if flag then return nil end
+        if flag or d == '' then return nil end
         return d
     end,
 
@@ -93,15 +94,15 @@ dict = {
 
         msg = '\\<' .. msg .. '\\>'
 
-        -- print('to msg', msg)
+        -- -- print('to msg', msg)
 
         for i = 1, msg:len() do
             local asc = msg:byte(i)
 
-            -- print('sending', msg:sub(i, i), string.format('%02x', asc))
+            -- -- print('sending', msg:sub(i, i), string.format('%02x', asc))
 
-            s = s .. ' ' .. lut[(asc >> 4) + 1]
-            s = s .. ' ' .. lut[(asc & 0xf) + 1]
+            s = s .. ' ' .. lut[bit.rshift(asc, 4) + 1]
+            s = s .. ' ' .. lut[bit.band(asc, 0xf) + 1]
 
             if s:len() > 200 then
                 table.insert(d, dict.mark1 .. s)
@@ -115,3 +116,5 @@ dict = {
         return d
     end
 }
+
+print('in engine-16, dict is', dict)
