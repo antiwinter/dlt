@@ -1,9 +1,8 @@
-﻿## Interface: 20300
-## Title: Drawf Love Tauren
-## Notes: Let you talk between Alligance and Horde.
-## Notes-zhCN: 打破联盟部落之间的沉默.
-## Author: Antiwintercold(cwow.grunt5.Itharius.tgsy)
-loc_enUS.lua
-loc_zhCN.lua
-DLT.xml
-DLT.lua
+﻿## Interface: 80100
+## Title: Dwarf love Tauren
+## Notes: Let's talk in Dwarlorahe ~
+## Author: antiwinter
+
+engine16.lua
+main.lua
+local.lua
