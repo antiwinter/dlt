@@ -1,3 +1,5 @@
+#!/usr/bin/env lua
+
 -- emulated functions
 ChatFrame1 = {
     AddMessage = function(self, msg)
@@ -41,3 +43,5 @@ for _, v in pairs(data) do
     print('sending', v:len(), v)
     dlt.cli(v)
 end
+
+dlt.cli('test')

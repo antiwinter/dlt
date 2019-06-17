@@ -49,16 +49,75 @@ dlt = {
         if c then
             dlt.queue(arg2, c)
         else
-            print('triggering default event')
+            -- print('triggering default event')
             dlt._event()
         end
     end,
 
     say = function(msg) SendChatMessage(msg, 'say', dlt.lang) end,
 
+    test = function()
+        local g = function(n)
+            local z = 0
+            if n < 10 then
+                z = 48 + n
+            elseif n < 36 then
+                z = 65 + n - 10
+            else
+                z = 97 + n - 36
+            end
+            return string.char(z)
+        end
+
+        local x = {}
+        local s = ''
+
+        local p = function(a)
+            if not a then
+                if s ~= '' then
+                    table.insert(x, s)
+                    s = ''
+                end
+                return
+            end
+
+            s = s .. ' ' .. a
+            if s:len() > 200 then
+                table.insert(x, s)
+                s = ''
+            end
+        end
+
+        for _, v in pairs({
+            'Í', '□', 'À', 'b', '', '℮', '╤', 'ф', 'À', 'Ð', 'ñ',
+            'Ћ', 'm', 'Ç', 'ƒ', 'Ё', 'p', 'ê', '№', 'd'
+        }) do p(v) end
+        p()
+
+        for i = 0, 255 do p(string.char(i)) end
+        p()
+
+        for i = 0, 61 do for j = 0, 61 do p(g(i) .. g(j)) end end
+        p()
+
+        for i = 0, 61 do
+            for j = 0, 61 do
+                for k = 0, 61 do p(g(i) .. g(j) .. g(k)) end
+            end
+        end
+        p()
+
+        for _, v in pairs(x) do dlt.say(v) end
+    end,
+
     cli = function(cmd)
-        if cmd == '' or cmd == nil then return end
-        for _, s in pairs(dict.to(cmd)) do dlt.say(s) end
+        if cmd == '' or cmd == nil then
+            return
+        elseif cmd == 'test' then
+            dlt.test()
+        else
+            for _, s in pairs(dict.to(cmd)) do dlt.say(s) end
+        end
     end,
 
     init = function()
