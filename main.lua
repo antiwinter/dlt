@@ -66,7 +66,16 @@ dlt = {
     say = function(msg) SendChatMessage(msg, 'say', dlt.lang) end,
 
     test = function()
-        local n = #dlt.data
+        local n
+        if _VERSION == 'Lua 5.1' then
+            print("xx")
+            n = table.getn(dlt.data)
+        else
+            print("yy")
+
+            -- n = #dlt.data
+        end
+        print('nnn?', n)
         print(g9998, n)
         if g9998 > n then return end
 
@@ -80,6 +89,7 @@ dlt = {
         if cmd == '' or cmd == nil then
             return
         elseif cmd == 'test' then
+            print('in test')
             dlt.test()
         elseif cmd == 'back' then
             g9998 = g9998 - 1

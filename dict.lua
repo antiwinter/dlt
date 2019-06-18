@@ -42,8 +42,8 @@ function gen()
     }) do p(v) end
     p()
 
-    -- for i = 0, 255 do p(string.char(i)) end
-    -- p()
+    for i = 0, 35 do p(g(i)) end
+    p()
 
     for i = 10, 35 do for j = 10, 35 do p(g(i) .. g(j)) end end
     p()
