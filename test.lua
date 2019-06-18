@@ -20,25 +20,22 @@ bit = {
 function GetDefaultLanguage() return 'Common' end
 function GetLocale() return 'enUS' end
 
-function ChatFrame_OnEvent()
-    ChatFrame1:AddMessage('[' .. arg2 .. '] says: ' .. arg1)
+function ChatFrame_OnEvent(a, event, msg, user)
+    ChatFrame1:AddMessage('[' .. user .. '] says: ' .. msg)
 end
 
 function SendChatMessage(msg)
-    event = 'CHAT_MSG_SAY'
-    arg1 = msg
-    arg2 = 'antiwinter'
-
-    ChatFrame_OnEvent()
+    ChatFrame_OnEvent(nil, 'CHAT_MSG_SAY', msg, 'antiwinter')
 end
 
 require 'engineY'
 require 'local'
+require 'dict'
 require 'main'
 
 -- begin test
-dlt.init()
-dlt.gen()
+-- dlt.init()
+-- dlt.data = gen()
 
 data = {
     '123', 'The quick brown fox jumps over the lazy dog!!',
@@ -51,4 +48,4 @@ for _, v in pairs(data) do
     dlt.cli(v)
 end
 
-for i = 1, 936 do dlt.cli('test') end
+for i = 1, 358 do dlt.cli('test') end

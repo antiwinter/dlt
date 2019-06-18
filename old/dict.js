@@ -193,12 +193,10 @@ let _o = dict.replace(/\n/g, ' ').split(' ')
 _o = _o.concat(a)
 
 _o.forEach(x => {
-  if (_d.indexOf(x) > -1 || x.match(/----/)) return
+  if (_d.indexOf(x) > -1 || x.match(/----/) || x.match(/^[A-Za-z]+$/)) return
   _d.push(x)
 })
 
-_d.forEach(x => {
-  console.log(JSON.stringify(x))
-})
+console.log(JSON.stringify(_d))
 
 console.log(_o.length, 'to', _d.length)

@@ -52,7 +52,7 @@ dlt = {
             -- for k, v in pairs({...}) do print(k, v) end
 
             local c = dict.from(msg)
-            print('filter got', c)
+            -- print('filter got', c)
             if c then
                 dlt.queue(user, c)
                 -- return
@@ -65,61 +65,6 @@ dlt = {
 
     say = function(msg) SendChatMessage(msg, 'say', dlt.lang) end,
 
-    gen = function()
-
-        local g = function(n)
-            local z = 0
-            if n < 10 then
-                z = 48 + n
-            elseif n < 36 then
-                z = 65 + n - 10
-            else
-                z = 97 + n - 36
-            end
-            return string.char(z)
-        end
-
-        local x = {}
-        local s = ''
-
-        local p = function(a)
-            if not a then
-                if s ~= '' then
-                    table.insert(x, s)
-                    s = ''
-                end
-                return
-            end
-
-            s = s .. ' ' .. a
-            if s:len() > 200 then
-                table.insert(x, s)
-                s = ''
-            end
-        end
-
-        for _, v in pairs({
-            'Í', '□', 'À', 'b', '', '℮', '╤', 'ф', 'À', 'Ð', 'ñ',
-            'Ћ', 'm', 'Ç', 'ƒ', 'Ё', 'p', 'ê', '№', 'd'
-        }) do p(v) end
-        p()
-
-        -- for i = 0, 255 do p(string.char(i)) end
-        -- p()
-
-        for i = 0, 35 do for j = 0, 35 do p(g(i) .. g(j)) end end
-        p()
-
-        for i = 0, 35 do
-            for j = 0, 35 do
-                for k = 0, 35 do p(g(i) .. g(j) .. g(k)) end
-            end
-        end
-        p()
-
-        dlt.data = x
-    end,
-
     test = function()
         local n = #dlt.data
         print(g9998, n)
@@ -131,11 +76,14 @@ dlt = {
     end,
 
     cli = function(cmd)
-        print("in dlt cli", cmd)
+        -- print("in dlt cli", cmd)
         if cmd == '' or cmd == nil then
             return
         elseif cmd == 'test' then
             dlt.test()
+        elseif cmd == 'back' then
+            g9998 = g9998 - 1
+            print('mv g9998 backward', g9998)
         else
             for _, s in pairs(dict.to(cmd)) do dlt.say(s) end
         end
@@ -169,4 +117,4 @@ print('0x36 >> 4 is', bit.rshift(0x36, 4))
 print('version is', _VERSION)
 
 dlt.init()
-dlt.gen()
+dlt.data = gen()
