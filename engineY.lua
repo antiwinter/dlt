@@ -4,9 +4,10 @@ dict = {
     alliance = {
         mark2 = 'fiofwof',
         tongue = {
-            'a', 'c', 'i', 'm', 'l', 'ab', 'ag', 'bw', 'AB', 'AG', 'bo', 'ch',
-            'bf', 'BO', 'CH', 'BF'
+            'e', 'a', 'p', 'z', 'ba', 'ag', 'BA', 'AG', 'ac', 'am', 'ao', 'ap',
+            'AC', 'AM', 'AO', 'AP'
         },
+
         ear = {
             'G', 'O', 'L', 'A', 'N', 'Ha', 'Gi', 'Mu', 'HA', 'GI', 'Ka', 'No',
             'Ko', 'KA', 'NO', 'KO'
@@ -16,8 +17,8 @@ dict = {
     horde = {
         mark2 = 'fwiewf',
         tongue = {
-            'e', 'a', 'p', 'z', 'ba', 'ag', 'BA', 'AG', 'ac', 'am', 'ao', 'ap',
-            'AC', 'AM', 'AO', 'AP'
+            'a', 'c', 'i', 'm', 'l', 'ab', 'ag', 'bw', 'AB', 'AG', 'bo', 'ch',
+            'bf', 'BO', 'CH', 'BF'
         },
         ear = {
             'Y', 'O', 'U', 'E', 'Ti', 'Me', 'TI', 'ME', 'Lo', 'Ve', 'An', 'Se',
