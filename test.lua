@@ -28,7 +28,8 @@ function SendChatMessage(msg)
     ChatFrame_OnEvent(nil, 'CHAT_MSG_SAY', msg, 'antiwinter')
 end
 
-require 'engineY'
+require 'levenshtein'
+require 'engine-raw'
 require 'local'
 require 'dict'
 require 'main'
@@ -37,10 +38,17 @@ require 'main'
 -- dlt.init()
 -- dlt.data = gen()
 
+-- data = {
+--     'The quick brown fox jumps over the lazy dog!!', '123',
+--     '从前有个山，山里有个洞',
+--     '这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong. 这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.'
+-- }
+
 data = {
-    '123', 'The quick brown fox jumps over the lazy dog!!',
-    '从前有个山，山里有个洞',
-    '这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong. 这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.'
+    'hello', 'how are you', 'for this you lose', 'you are an evil korean',
+    'may i help you', 'do not kill me', 'fuck you', 'stupid guy', 'ni hao',
+    'bu yao sha wo', 'chinese guy', 'run forrest run', 'help me', 'baby', 'sb',
+    'nice to meet you', 'sorry', 'quest no kill', 'land lord skil', 'you bad bull'
 }
 
 for _, v in pairs(data) do
@@ -48,4 +56,4 @@ for _, v in pairs(data) do
     dlt.cli(v)
 end
 
-for i = 1, 358 do dlt.cli('test') end
+-- for i = 1, 358 do dlt.cli('test') end

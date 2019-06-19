@@ -1,6 +1,6 @@
-local dict = {
+dict = {
     rset = {},
-    a2h = {
+    alliance = {
         A = 'Í',
         B = '□',
         K = 'À',
@@ -33,7 +33,6 @@ local dict = {
         RE = 'YY',
         VI = '2Ð',
         r = 'à',
-        RUFF = '665G',
         FAR = 'BMR',
         HI = 'Ä2',
         ME = 'YG',
@@ -42,7 +41,6 @@ local dict = {
         AD = 'ÇÇ',
         GOT = 'À5G',
         Fa = 'ƒb',
-        HAMER = 'Ç•AG3',
         MAN = 'Í•1',
         ROT = 'Í•3',
         SKIL = 'ƒÇ12',
@@ -54,7 +52,6 @@ local dict = {
         Od = 'Äà',
         DA = '•5',
         TI = 'ZY',
-        FORTHIS = '5565255',
         RAs = "I'm",
         AS = "'Ç",
         BO = "'Ð",
@@ -102,13 +99,54 @@ local dict = {
         AN = '20'
     },
 
-    similiarity = function(a, b)
-        if not a or not b then return 0.5 end
-        if a:lower() == b:lower() then return 1 end
+    match = function(s)
+        local d = 100
+        local res = ''
+        for k, v in pairs(dict.set) do
+            local _d = k:levenshtein(s)
+            if _d < d then
+                res = k
+                d = _d
+            end
+        end
 
+        return res, d
     end,
 
-    match = function(seg) end,
+    tr = function(seg)
+        local s0, n0 = dict.match(seg)
+        local s = seg:sub(1, 3)
+        local s1, s2, s3 = s:sub(1, 1), s:sub(2, 2), s:sub(3, 3)
+        local ss1, ss2 = s:sub(1, 2), s:sub(2, 3)
+
+        if (n0 < 0.2) then return s0, '' end
+
+        local n, n1, n2, n3, nn1, nn2
+        s, n = dict.match(s)
+        s1, n1 = dict.match(s1)
+        s2, n2 = dict.match(s2)
+        s3, n3 = dict.match(s3)
+        ss1, nn1 = dict.match(ss1)
+        ss2, nn2 = dict.match(ss2)
+
+        if n1 + n2 + n3 < n then
+            s = s1 .. ' ' .. s2 .. ' ' .. s3
+            n = n1 + n2 + n3
+        end
+
+        if nn1 + n3 < n then
+            s = ss1 .. ' ' .. s3
+            n = nn1 + n3
+        end
+
+        if n1 + nn2 < n then
+            s = s1 .. ' ' .. ss2
+            n = n1 + nn2
+        end
+
+        -- print(s, 'distance', n)
+        return s, seg:sub(4, -1)
+    end,
 
     init = function(faction)
         dict.set = dict[faction]
@@ -128,10 +166,11 @@ local dict = {
     to = function(msg)
         local res = {}
         local _d = ''
+
         for w in msg:gmatch('%S+') do
             local v, s, d = nil, w, ''
             repeat
-                v, s = dict.match(s)
+                v, s = dict.tr(s)
                 d = d .. v .. ' ' -- connect segments
             until s == ''
 
@@ -143,6 +182,7 @@ local dict = {
             end
         end
 
+        if _d ~= '' then table.insert(res, _d) end
         return res
     end
 
