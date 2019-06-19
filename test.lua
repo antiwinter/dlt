@@ -48,7 +48,7 @@ data = {
     'hello', 'how are you', 'for this you lose', 'you are an evil korean',
     'may i help you', 'do not kill me', 'fuck you', 'stupid guy', 'ni hao',
     'bu yao sha wo', 'chinese guy', 'run forrest run', 'help me', 'baby', 'sb',
-    'nice to meet you', 'sorry', 'quest no kill', 'land lord skil', 'you bad bull'
+    'nice to meet you', 'sorry', 'quest no kill', 'land lord skil', 'you bad bull', '1891， 地, crash'
 }
 
 for _, v in pairs(data) do

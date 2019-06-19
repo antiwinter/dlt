@@ -2835,16 +2835,19 @@ function string.levenshtein(str1, str2)
     for j = 0, len2, 1 do matrix[0][j] = j end
 
     -- actual Levenshtein algorithm
+    local x = 0.4
     for i = 1, len1, 1 do
         for j = 1, len2, 1 do
             local c1, c2 = str1:sub(i, i), str2:sub(j, j)
             if (c1:lower() == c2:lower()) then
                 cost = 0
             else
-                cost = 1 - sim[c1][c2] / 500
+                local co = sim[c1]
+                co = co and co[c2] or x
+                co = co and co or x
+                cost = 1 - co / 500
             end
 
-            local x = 0.4
             matrix[i][j] = math.min(matrix[i - 1][j] + x, matrix[i][j - 1] + x,
                                     matrix[i - 1][j - 1] + cost)
         end
