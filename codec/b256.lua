@@ -98,10 +98,9 @@ local codec = {
             local t, n = s:byte(i)
             n = get1(t)
 
-            print(string.format('_u16 t: %02x %d', t, n))
-            _t = bit.lshift(_t, ls)
-            _t = bit.bor(_t, bit.band(t, bit.lshift(1, 7 - n) - 1))
-            ls = 7 - n
+            _t = bit.bor(_t,
+                         bit.lshift(bit.band(t, bit.lshift(1, 7 - n) - 1), ls))
+            ls = ls + 7 - n
 
             if n > 1 then
                 remain = n - 1
@@ -112,7 +111,6 @@ local codec = {
             end
 
             if remain == 0 then
-                print(string.format('_u16_t: %04x', _t))
                 d = d .. string.char(bit.band(_t, 0xff))
                 d = d .. string.char(bit.rshift(_t, 8))
                 _t = 0
@@ -141,10 +139,9 @@ local codec = {
         if l / 2 ~= l // 2 then return nil end
 
         for i = 1, l, 2 do
-            local t = bit.bor(s.byte(i), bit.lshift(s.byte(i + 1), 8))
+            local t = bit.bor(s:byte(i), bit.lshift(s:byte(i + 1), 8))
             local n = ffs(t)
 
-            print(string.format('ttt %04x %d', t, i))
             if n < 8 then -- 1 byte
                 d = d .. string.char(t)
             elseif n < 12 then -- 2 byte
@@ -153,10 +150,6 @@ local codec = {
                 d = d ..
                         string.char(0xe0 + t % 16, 0x80 + t // 16 % 64,
                                     0x80 + t // 0x400)
-
-                print(string.format("u16 dec: %04x as %02x %02x %02x", t,
-                                    0xe0 + t % 16, 0x80 + t // 16 % 64,
-                                    0x80 + t // 0x400))
             end
         end
 
@@ -164,7 +157,7 @@ local codec = {
     end,
 
     init = function(self, faction, oppositeLang)
-        print(self, faction, oppositeLang)
+        -- print(self, faction, oppositeLang)
         self.mark2 = '[' .. oppositeLang .. '] '
         self.lips = self._genTable(self[faction].lips)
         self.ears = self._genTable(self[faction].lips)
@@ -172,9 +165,9 @@ local codec = {
         -- for k, v in pairs(self.ears) do self.ears[v] = k end
 
         print('b256 inited')
-        for k, v in pairs(self.lips) do
-            print(string.format('%s=%s', k, v))
-        end
+        -- for k, v in pairs(self.lips) do
+        --     print(string.format('%s=%s', k, v))
+        -- end
     end,
 
     dec = function(self, msg)
@@ -190,13 +183,11 @@ local codec = {
 
         -- remove mark
         msg = msg:gsub('%S+', '', 1)
-        print('lut found', msg)
 
         local use16
         if msg:find(lut[self._u16mark]) then
             msg = msg:gsub(lut[self._u16mark], '', 1)
             use16 = 1
-            print('use16 found', msg)
         end
 
         local d = ''
@@ -221,8 +212,6 @@ local codec = {
             d = d:sub(1, -3)
         end
 
-        -- print('action', action)
-
         return {action = action, data = d}
     end,
 
@@ -242,12 +231,11 @@ local codec = {
         msg = '\\<' .. msg .. '\\>'
 
         local u16 = self._u16(msg)
-        print('u16<>msg', u16:len(), msg:len())
 
         -- -- print('to msg', msg)
         if u16:len() < msg:len() then
-            print('enc using u16')
-            msg = self._u16(msg)
+            -- print('enc using u16')
+            msg = u16
             use16 = 1
         end
 
