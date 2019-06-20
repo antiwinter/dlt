@@ -2957,7 +2957,7 @@ dltRaw = {
         vrum = 'plus',
         goth = 'kick'
     },
-    
+
     horde = {
         O = 'E',
         A = 'F',
