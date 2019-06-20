@@ -1,5 +1,5 @@
 local codec = {
-    mark1 = '[Dwarlorahe]',
+    mark1 = '[Dwarlorahe] ',
     alliance = {
         lips = {
             'An', 'Ko', 'Lo', 'Lu', 'Me', 'Ne', 'Re', 'Ru', 'Se', 'Ti', 'Va',
@@ -50,48 +50,122 @@ local codec = {
             res[set[i - 96]:lower()] = i
         end
 
+        local fill = function(from, to, limit)
+            for i = from, to do
+                if not res[i] then
+                    for j = 1, limit do
+                        for k = 0, 15 do
+                            local key = mask(set[j], k)
+                            if res[key] == nil then
+                                res[i] = key
+                                res[key] = i
+                                break
+                            end
+                        end
+
+                        if res[i] then break end
+                    end
+                end
+            end
+        end
+
         -- round 3: fill 78, 159 with 2~3 letters
-        for i = 78, 159 do
-            if not res[i] then
-                for j = 1, 31 do
-                    for k = 0, 15 do
-                        local key = mask(set[j], k)
-                        if res[key] == nil then
-                            res[i] = key
-                            res[key] = i
-                            break
-                        end
-                    end
-
-                    if res[i] then break end
-                end
-            end
-        end
-
+        fill(78, 159, 31)
         -- round 4: fill the rest with what ever
-        for i = 0, 255 do
-            if not res[i] then
-                for j = 1, 38 do
-                    for k = 0, 15 do
-                        local key = mask(set[j], k)
-                        if res[key] == nil then
-                            res[i] = key
-                            res[key] = i
-                            break
-                        end
-                    end
+        fill(0, 260, 38)
+        return res
+    end,
 
-                    if res[i] then break end
+    -- utf8 to utf16
+    _u16mark = 259,
+    _u16 = function(s)
+        local d, l, i = '', s:len()
+        local get1 = function(t)
+            local r, j = 0
+            for j = 7, 0, -1 do
+                if bit.band(t, bit.lshift(1, j)) ~= 0 then
+                    r = r + 1
+                else
+                    break
                 end
+            end
+
+            return r
+        end
+        local remain, ls, _t = 0, 0, 0
+
+        for i = 1, l do
+            local t, n = s:byte(i)
+            n = get1(t)
+
+            print(string.format('_u16 t: %02x %d', t, n))
+            _t = bit.lshift(_t, ls)
+            _t = bit.bor(_t, bit.band(t, bit.lshift(1, 7 - n) - 1))
+            ls = 7 - n
+
+            if n > 1 then
+                remain = n - 1
+            elseif n > 0 then
+                remain = remain - 1
+            else
+                remain = 0
+            end
+
+            if remain == 0 then
+                print(string.format('_u16_t: %04x', _t))
+                d = d .. string.char(bit.band(_t, 0xff))
+                d = d .. string.char(bit.rshift(_t, 8))
+                _t = 0
+                ls = 0
             end
         end
 
-        return res
+        return d
+    end,
+
+    -- utf16 to utf8
+    _utf8 = function(s)
+        local ffs = function(t)
+            local r, i = 0
+
+            for i = 0, 15 do
+                if bit.band(bit.rshift(t, i), 1) == 1 then
+                    r = i + 1
+                end
+            end
+            return r
+        end
+
+        local l, d, i = s:len(), ''
+
+        if l / 2 ~= l // 2 then return nil end
+
+        for i = 1, l, 2 do
+            local t = bit.bor(s.byte(i), bit.lshift(s.byte(i + 1), 8))
+            local n = ffs(t)
+
+            print(string.format('ttt %04x %d', t, i))
+            if n < 8 then -- 1 byte
+                d = d .. string.char(t)
+            elseif n < 12 then -- 2 byte
+                d = d .. string.char(0xc0 + t % 32, 0x80 + t // 32)
+            else -- 3 bytes
+                d = d ..
+                        string.char(0xe0 + t % 16, 0x80 + t // 16 % 64,
+                                    0x80 + t // 0x400)
+
+                print(string.format("u16 dec: %04x as %02x %02x %02x", t,
+                                    0xe0 + t % 16, 0x80 + t // 16 % 64,
+                                    0x80 + t // 0x400))
+            end
+        end
+
+        return d
     end,
 
     init = function(self, faction, oppositeLang)
         print(self, faction, oppositeLang)
-        self.mark2 = '[' .. oppositeLang .. ']'
+        self.mark2 = '[' .. oppositeLang .. '] '
         self.lips = self._genTable(self[faction].lips)
         self.ears = self._genTable(self[faction].lips)
         -- for k, v in pairs(self.lips) do self.lips[v] = k end
@@ -105,7 +179,6 @@ local codec = {
 
     dec = function(self, msg)
         local lut
-        local hex, flag = 0, nil
 
         if msg:find(self.mark1) then
             lut = self.lips
@@ -115,32 +188,27 @@ local codec = {
 
         if not lut then return nil end
 
-        local d = ''
+        -- remove mark
+        msg = msg:gsub('%S+', '', 1)
+        print('lut found', msg)
 
-        local skip = nil
-        for w in msg:gmatch('[%a%w]+') do
-            if not skip then
-                skip = 1
-            else
-                -- print('word', w, lut[w])
-                if lut[w] == nil then return nil end
-
-                hex = bit.bor(bit.lshift(hex, 4), (lut[w] - 1))
-
-                if flag then
-                    d = d .. string.char(hex)
-                    -- print('tr w', string.format('%02x', hex), string.char(hex))
-                    hex = 0
-                    flag = nil
-                else
-                    flag = 1
-                end
-            end
+        local use16
+        if msg:find(lut[self._u16mark]) then
+            msg = msg:gsub(lut[self._u16mark], '', 1)
+            use16 = 1
+            print('use16 found', msg)
         end
 
-        -- print('translate to', d, flag)
+        local d = ''
+        for w in msg:gmatch('%S+') do
+            -- print('word', w, lut[w])
+            if lut[w] == nil then return nil end
+            d = d .. string.char(lut[w])
+        end
 
-        if flag or d == '' then return nil end
+        if use16 then d = self._utf8(d) end
+
+        if d == '' then return nil end
 
         local action = 0
         if d:sub(1, 2) == '\\<' then
@@ -162,28 +230,43 @@ local codec = {
         local d = {}
         local s = ''
         local lut = self.lips
+        local use16
+        local output = function(s)
+            local _s = ''
+            _s = _s .. self.mark1
+            if use16 then _s = _s .. lut[self._u16mark] .. ' ' end
+            _s = _s .. s:sub(1, -2)
+            table.insert(d, _s)
+        end
 
         msg = '\\<' .. msg .. '\\>'
 
-        -- -- print('to msg', msg)
+        local u16 = self._u16(msg)
+        print('u16<>msg', u16:len(), msg:len())
 
-        for i = 1, msg:len() do
+        -- -- print('to msg', msg)
+        if u16:len() < msg:len() then
+            print('enc using u16')
+            msg = self._u16(msg)
+            use16 = 1
+        end
+
+        for i = 1, msg:len(), 2 do
             local asc = msg:byte(i)
 
-            -- -- print('sending', msg:sub(i, i), string.format('%02x', asc))
-
-            s = s .. ' ' .. lut[bit.rshift(asc, 4) + 1]
-            s = s .. ' ' .. lut[bit.band(asc, 0xf) + 1]
+            s = s .. lut[msg:byte(i)] .. ' '
+            if i < msg:len() then
+                s = s .. lut[msg:byte(i + 1)] .. ' '
+            end
 
             if s:len() > 200 then
-                table.insert(d, self.mark1 .. s)
+                output(s)
                 s = ''
             end
         end
 
         -- print('d??', d)
-        if s ~= '' then table.insert(d, self.mark1 .. s) end
-
+        if s ~= '' then output(s) end
         return d
     end
 }
