@@ -10,4 +10,4 @@ Golveldbarad, Mandosdaegil, Nevrenrothas, Waldirskilde`
 
 let dict = raw.replace(/\n| /g, '').split(',')
 
-console.log(dict.length, 'keys')
+console.log(dict.length, 'keys', 6 * 2 + 12 * 4 + 13 * 8)
