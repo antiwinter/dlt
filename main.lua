@@ -1,9 +1,14 @@
-g9999 = 0
-g9998 = 1
+local dict = require 'dict'
+local b16 = require 'codec/b16'
+local raw = require 'codec/raw'
+
 dlt = {
     _event = ChatFrame_OnEvent,
     lang = '',
     cache = {},
+    mode = 'raw',
+    codec = raw,
+    mask = 1,
 
     rgb = function(x, s)
         return s
@@ -11,7 +16,7 @@ dlt = {
     end,
 
     log = function(msg)
-        ChatFrame1:AddMessage(dlt.rgb(0x6666aa00, '[DLT]') ..
+        ChatFrame1:AddMessage(dlt.rgb(0x6666aa00, '[∂]') ..
                                   dlt.rgb(0xaaaa6600, msg))
     end,
 
@@ -23,108 +28,85 @@ dlt = {
 
     queue = function(user, piece)
         local c = dlt.cache
+        if not c[user] then c[user] = '' end
+        c[user] = c[user] .. piece
+    end,
 
-        -- print('queue', user, piece, piece:sub(1, 2))
-        -- start piece, clear previous
-        if piece:sub(1, 2) == '\\<' then
-            if c[user] then dlt.msg(user, c[user] .. '--') end
-            c[user] = ''
-            -- print('seg start', c[user])
-            piece = piece:sub(3)
-        end
+    flush = function(user)
+        local c = dlt.cache
 
-        -- ending piece, output result
-        if piece:sub(-2) == '\\>' then
-            dlt.msg(user, c[user] .. piece:sub(1, -3))
+        if c[user] and c[user] ~= '' then
+            dlt.msg(user, c[user])
             c[user] = nil
-        else
-            -- connect w/ previous
-            c[user] = c[user] .. piece
-            -- print('seg add', c[user])
         end
     end,
 
     filter = function(...)
-
         local _, event, msg, user = ...
         if event == 'CHAT_MSG_SAY' then
 
             -- for k, v in pairs({...}) do print(k, v) end
 
-            local c = dict.from(msg)
+            local res = dlt.codec:dec(msg)
             -- print('filter got', c)
-            if c then
-                dlt.queue(user, c)
-                -- return
+            if res then
+                if bit.band(res.action, 1) ~= 0 then
+                    dlt.flush(user)
+                end
+
+                dlt.queue(user, res.data)
+                if bit.band(res.action, 2) ~= 0 then
+                    dlt.flush(user)
+                end
+
+                if dlt.mask then return end
             end
         end
 
         dlt._event(...)
-
     end,
 
     say = function(msg) SendChatMessage(msg, 'say', dlt.lang) end,
-
-    test = function()
-        local n
-        if _VERSION == 'Lua 5.1' then
-            print("xx")
-            n = table.getn(dlt.data)
-        else
-            print("yy")
-
-            -- n = #dlt.data
-        end
-        print('nnn?', n)
-        print(g9998, n)
-        if g9998 > n then return end
-
-        -- print(dlt.data[g9998])
-        dlt.say(dlt.data[g9998])
-        g9998 = g9998 + 1
-    end,
 
     cli = function(cmd)
         -- print("in dlt cli", cmd)
         if cmd == '' or cmd == nil then
             return
+        elseif cmd == 'mode' then
+            dlt.mode = dlt.mode == 'raw' and 'dlt' or 'raw'
+            dlt.codec = dlt.mode == 'raw' and raw or b16
+            dlt.log(string.format('DLT is now in %s mode', dlt.mode))
+        elseif cmd == 'mask' then
+            dlt.mask = not dlt.mask
+            dlt.log(string.format('DLT mask is %s', dlt.mask and 'On' or 'Off'))
         elseif cmd == 'test' then
-            print('in test')
-            dlt.test()
+            print(string.format('testing %d/%d', dict.cursor, dict.n))
+            dlt.say(dict.get())
         elseif cmd == 'back' then
-            g9998 = g9998 - 1
-            print('mv g9998 backward', g9998)
+            dict.back()
         else
-            for _, s in pairs(dict.to(cmd)) do dlt.say(s) end
+            for _, s in pairs(dlt.codec:enc(cmd)) do dlt.say(s) end
         end
     end,
 
     init = function()
-        print('in init')
         ChatFrame_OnEvent = dlt.filter
-        print('in 1')
-
         SlashCmdList['DLT'] = dlt.cli
         SLASH_DLT1 = '/dlt'
-        print('in 2')
 
         dlt.lang = GetDefaultLanguage('player')
-        print('in 3', dlt.lang, dltLocal.common)
-        print('dict is', dict)
-        dict.init(dlt.lang == dltLocal.common and 'alliance' or 'horde')
-        print('in 4')
+        local faction = 'horde'
+        local oppositeLang = dltLocal.common
+        if dlt.lang == dltLocal.common then
+            faction = 'alliance'
+            oppositeLang = dltLocal.orcish
+        end
 
-        dlt.log('inited')
-
-        print('inited')
+        b16:init(faction, oppositeLang)
+        raw:init(faction, oppositeLang)
+        print('dlt inited')
     end
 }
 
-print('in')
-
-print('0x36 >> 4 is', bit.rshift(0x36, 4))
-
-print('version is', _VERSION)
-
+print(_VERSION)
 dlt.init()
-dlt.data = gen()
