@@ -1,6 +1,7 @@
-local dict = require 'dict'
-local b16 = require 'codec/b256'
-local raw = require 'codec/raw'
+local b16 = dltB256
+local raw = dltRaw
+
+print(b16)
 
 dlt = {
     _event = ChatFrame_OnEvent,
@@ -110,3 +111,4 @@ dlt = {
 
 print(_VERSION)
 dlt.init()
+dict.init()

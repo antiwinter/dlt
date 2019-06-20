@@ -1,6 +1,4 @@
-local w0, w1, w2, w3, w4 = require 'dict-data'
-
-local dict = {
+dict = {
     cursor = 1,
     init = function()
         local g = function(n)
@@ -37,8 +35,10 @@ local dict = {
         for i = 0, 35 do p(g(i)) end
         p()
 
-        for _, v in pairs(w0) do p(v) end
-        p()
+        for _, v in pairs(w0) do
+            p(v)
+            p()
+        end
 
         for _, v in pairs(w1) do p(v) end
         p()
@@ -49,8 +49,11 @@ local dict = {
         for _, w in pairs(w3) do p(w) end
         p()
 
-        dict.n = table.getn(dlt.data)
+        for _, w in pairs(w4) do p(w) end
+        p()
+
         dict.data = x
+        dict.n = table.getn(dict.data)
     end,
 
     get = function()
@@ -64,5 +67,3 @@ local dict = {
         dict.cursor = dict.cursor - (dict.cursor <= 1 and 0 or 1)
     end
 }
-
-return dict

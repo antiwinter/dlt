@@ -1,17 +1,17 @@
-local w0 = {
+w0 = {
     'å', '∫', 'ç', '∂', '´', 'ƒ', '©', '˙', 'ˆ', '∆', '˚', '¬',
     'µ', '˜', 'ø', 'π', 'œ', '®', 'ß', '†', '¨', '√', '∑', '≈',
     '¥', 'Í', '□', 'À', '�', '℮', '╤', 'ф', 'Ð', 'ñ', 'Ћ', 'Ç',
     'ƒ', 'Ё', 'ê', '№', 'Ä', '•', 'à', 'ü'
 }
-local w1 = {
+w1 = {
     '[Dwarlorahe]', '•0', '•3•', "'", '63636', '20', '0•', "'ƒ",
     '•Ð', 'ÇÍ', "2'", '00', '2Ð', '665G', '979', 'Ä2', '•Ç', '3À',
     'Ç•', 'ÇÇ', 'Ç1T', 'ƒb', 'Ç•AG3', 'Ç•ÇL', 'Í•1', 'Í•3',
     'ƒÇ12', 'ƒÇ•1', 'ƒÇ•2', 'Ç1b', 'Ç•ÇB', '№2', '№z',
     '•5', '22', 'you’re', 'À5G', 'Äà', "I'm", "'Ç", "'Ð"
 }
-local w2 = {
+w2 = {
     'zn', 'ok', 'ol', 'ac', 'ne', 'nd', 'nb', 'om', 'on', 'na', 'np', 'mw',
     'mv', 'op', 'or', 'mu', 'mt', 'ms', 'mr', 'mp', 'za', 'nr', 'xx', 'xw',
     'xu', 'xs', 'xr', 'os', 'ot', 'xi', 'xd', 'xc', 'mo', 'mn', 'mm', 'ml',
@@ -49,7 +49,7 @@ local w2 = {
     'ca', 'zo', 'bz', 'bx', 'bv', 'bf', 'bg', 'bi', 'by', 'bu', 'bt', 'bs',
     'br', 'bp', 'bo', 'bn', 'bm', 'bl', 'rd'
 }
-local w3 = {
+w3 = {
     'aeq', 'aer', 'pen', 'mal', 'won', 'may', 'mah', 'pep', 'per', 'mag', 'mae',
     'wok', 'woy', 'aes', 'wog', 'mad', 'woe', 'aet', 'wod', 'mac', 'mab', 'oct',
     'noo', 'lxx', 'oda', 'wob', 'lwp', 'odd', 'lwo', 'lwm', 'afb', 'afd', 'lwl',
@@ -97,7 +97,7 @@ local w3 = {
     'pon', 'yod', 'yob', 'nag', 'naf', 'pop', 'wet', 'inv', 'por', 'pos', 'wes',
     'pot', 'pow', 'pox', 'poz', 'nae'
 }
-local w4 = {
+w4 = {
     'kits', 'kith', 'kyte', 'kite', 'alif', 'mpbs', 'kist', 'kiss', 'wied',
     'kish', 'alii', 'nhan', 'kirn', 'kirk', 'widu', 'kiri', 'kips', 'kipe',
     'ngai', 'alin', 'kins', 'kino', 'kink', 'plak', 'plan', 'king', 'kine',
@@ -155,4 +155,3 @@ local w4 = {
     'jann', 'jank', 'jane', 'neum', 'jams', 'jami', 'jamb', 'jama', 'xylo',
     'jako', 'acis', 'amba', 'jake', 'neuk'
 }
-return w0, w1, w2, w3, w4

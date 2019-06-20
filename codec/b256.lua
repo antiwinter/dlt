@@ -1,4 +1,6 @@
-local codec = {
+print('in b256 ???')
+
+dltB256 = {
     mark1 = '[Dwarlorahe] ',
     alliance = {
         lips = {
@@ -15,8 +17,10 @@ local codec = {
 
     horde = {
         lips = {
-            'A', 'C', 'I', 'M', 'L', 'Ab', 'Ag', 'Bw', 'AB', 'AG', 'Bo', 'Ch',
-            'Bf', 'BO', 'CH', 'BF'
+            'An', 'Ko', 'Lo', 'Lu', 'Me', 'Ne', 'Re', 'Ru', 'Se', 'Ti', 'Va',
+            'Ve', 'Ash', 'Bor', 'Bur', 'Far', 'Gol', 'Hir', 'Lon', 'Mod', 'Nud',
+            'Ras', 'Ver', 'Vil', 'Vos', 'A', 'E', 'I', 'O', 'U', 'Y', 'Ador',
+            'Agol', 'Dana', 'Goth', 'Lars', 'Noth', 'Nuff'
         },
         ears = {
             'Y', 'O', 'U', 'E', 'Ti', 'Me', 'TI', 'ME', 'Lo', 'Ve', 'An', 'Se',
@@ -136,7 +140,7 @@ local codec = {
 
         local l, d, i = s:len(), ''
 
-        if l / 2 ~= l // 2 then return nil end
+        if l / 2 ~= bit.rshift(l, 1) then return nil end
 
         for i = 1, l, 2 do
             local t = bit.bor(s:byte(i), bit.lshift(s:byte(i + 1), 8))
@@ -145,11 +149,11 @@ local codec = {
             if n < 8 then -- 1 byte
                 d = d .. string.char(t)
             elseif n < 12 then -- 2 byte
-                d = d .. string.char(0xc0 + t % 32, 0x80 + t // 32)
+                d = d .. string.char(0xc0 + t % 32, 0x80 + bit.rshift(t, 5))
             else -- 3 bytes
                 d = d ..
-                        string.char(0xe0 + t % 16, 0x80 + t // 16 % 64,
-                                    0x80 + t // 0x400)
+                        string.char(0xe0 + t % 16, 0x80 + bit.rshift(t, 4) % 64,
+                                    0x80 + bit.rshift(t, 10))
             end
         end
 
@@ -259,5 +263,4 @@ local codec = {
     end
 }
 
-print('in codec-b16, codec is', codec)
-return codec
+print('???')

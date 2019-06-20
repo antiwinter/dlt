@@ -1,4 +1,4 @@
-local codec = {
+dltB16 = {
     mark1 = '[Dwarlorahe]',
     alliance = {
         lips = {
@@ -117,5 +117,4 @@ local codec = {
     end
 }
 
-print('in codec-b16, codec is', codec)
-return codec
+
