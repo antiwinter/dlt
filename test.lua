@@ -34,13 +34,13 @@ end
 
 require 'dict'
 require 'codec/raw'
-require 'codec/b16'
+require 'codec/b256'
 require 'local'
 require 'main'
 
 -- begin test
 
--- dlt.cli('mask')
+dlt.cli('mask')
 data = {
     'hello', 'how are you', 'for this you lose', 'you are an evil korean',
     'may i help you', 'do not kill me', 'fuck you', 'stupid guy', 'ni hao',

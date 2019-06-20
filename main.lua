@@ -1,5 +1,5 @@
 local dict = require 'dict'
-local b16 = require 'codec/b16'
+local b16 = require 'codec/b256'
 local raw = require 'codec/raw'
 
 dlt = {
