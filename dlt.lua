@@ -102,7 +102,7 @@ dlt = {
         end
 
         dlt.codec:init(faction, oppositeLang)
-        dlt.log(string.format('Dwarf love tauren 2.0, your faction is %s',
-                              faction))
+        dlt.log(
+            string.format('[Dwarlorahe] Dwarf love Tauren 2.0 (%s)', faction))
     end
 }
