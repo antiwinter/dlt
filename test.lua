@@ -45,7 +45,7 @@ require 'main'
 
 -- begin test
 
--- dlt.cli('mask')
+dlt.cli('mask')
 data = {
     'hello', 'how are you', 'for this you lose', 'you are an evil korean',
     'may i help you', 'do not kill me', 'fuck you', 'stupid guy', 'ni hao',
@@ -64,7 +64,8 @@ dlt.cli('mode')
 data = {
     'The quick brown fox jumps over the lazy dog!!', '123',
     '从前有个山，山里有个洞',
-    '这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong. 这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.'
+    '这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong. 这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.这条信息没有别的特色，就是非常的长，this message is no special but very loooooooong.',
+    '这条信息没有别的特色，就是非常的长，这条信息没有别的特色，就是非常的长，这条信息没有别的特色，就是非常的长，这条信息没有别的特色，就是非常的长，这条信息没有别的特色，就是非常的长，这条信息没有别的特色，就是非常的长，这条信息没有别的特色，就是非常的长，这条信息没有别的特色，就是非常的长'
 }
 
 for _, v in pairs(data) do

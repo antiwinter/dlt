@@ -63,8 +63,8 @@ local codec = {
         local fill = function(from, to, limit)
             for i = from, to do
                 if not res[i] then
-                    for j = 1, limit do
-                        for k = 0, 15 do
+                    for k = 0, 15 do
+                        for j = 1, limit do
                             local key = mask(set[j], k)
                             if res[key] == nil then
                                 res[i] = key
