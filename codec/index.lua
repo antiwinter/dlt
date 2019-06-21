@@ -2,7 +2,7 @@ local codec = {
     egi = {},
     register = function(self, name, egi) self.egi[name] = egi end,
     dec = function(self, msg)
-        local res
+        local res, _, egi
         for _, egi in pairs(self.egi) do
             res = egi:dec(msg)
             if res then return res end
@@ -12,6 +12,7 @@ local codec = {
     end,
     enc = function(self, name, msg) return self.egi[name]:enc(msg) end,
     init = function(self, faction, oppositeLang)
+        local _, egi
         for _, egi in pairs(self.egi) do egi:init(faction, oppositeLang) end
     end
 }

@@ -32,6 +32,7 @@ dict = {
             end
         end
 
+        local i, _, v
         for i = 0, 35 do p(g(i)) end
         p()
 

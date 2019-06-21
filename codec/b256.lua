@@ -90,7 +90,7 @@ local codec = {
     -- utf8 to utf16
     _u16mark = 259,
     _u16 = function(s)
-        local d, l, i = '', s:len()
+        local d, l, i, j = '', s:len()
         local get1 = function(t)
             local r, j = 0
             for j = 7, 0, -1 do
@@ -202,7 +202,7 @@ local codec = {
             use16 = 1
         end
 
-        local d = ''
+        local d, w = ''
         for w in msg:gmatch('%S+') do
             -- print('word', w, lut[w])
             if lut[w] == nil then return nil end
@@ -251,6 +251,7 @@ local codec = {
             use16 = 1
         end
 
+        local i
         for i = 1, msg:len(), 2 do
             local asc = msg:byte(i)
 

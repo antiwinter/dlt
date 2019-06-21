@@ -2818,6 +2818,7 @@ function string.diff(str1, str2)
     local matrix = {}
     local cost = 0
     local x = 0.4
+    local i, j
 
     -- quick cut-offs to save time
     if (len1 == 0) then
@@ -3041,6 +3042,7 @@ local codec = {
     match = function(self, s)
         local d = 100
         local res = ''
+        local k, v
         for k, v in pairs(self.set) do
             local _d = k:diff(s)
             if _d < d then
@@ -3092,6 +3094,7 @@ local codec = {
     end,
 
     init = function(self, faction, oppositeLang)
+        local k, v
 
         self.set = self[faction]
         self.mark2 = '[' .. oppositeLang .. ']'
@@ -3100,7 +3103,7 @@ local codec = {
     end,
 
     dec = function(self, msg)
-        local d = ''
+        local d, w = ''
         for w in msg:gmatch('%S+') do
             if self.rset[w] == nil then return nil end
             d = d .. self.rset[w] .. ' '
@@ -3112,7 +3115,7 @@ local codec = {
 
     enc = function(self, msg)
         local res = {}
-        local _d = ''
+        local _d, w = ''
 
         -- print('raw encoding', msg)
         for w in msg:gmatch('%S+') do

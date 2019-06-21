@@ -80,6 +80,7 @@ dlt = {
         elseif cmd == 'back' then
             dict.back()
         else
+            local _, s
             for _, s in pairs(dlt.codec:enc(dlt.mode, cmd)) do
                 dlt.say(s)
             end

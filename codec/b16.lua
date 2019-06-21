@@ -23,6 +23,7 @@ local codec = {
     },
 
     init = function(self, faction, oppositeLang)
+        local k, v
         print(self, faction, oppositeLang)
         self.mark2 = '[' .. oppositeLang .. ']'
         self.lips = self[faction].lips
@@ -35,6 +36,7 @@ local codec = {
     dec = function(self, msg)
         local lut
         local hex, flag = 0, nil
+        local w
 
         if msg:find(self.mark1) then
             lut = self.lips
@@ -91,6 +93,7 @@ local codec = {
         local d = {}
         local s = ''
         local lut = self.lips
+        local i
 
         msg = '\\<' .. msg .. '\\>'
 
