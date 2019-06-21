@@ -44,7 +44,7 @@ dlt = {
             -- for k, v in pairs({...}) do print(k, v) end
 
             local res = dlt.codec:dec(msg)
-            -- print('filter got', c)
+            -- print('filter got', res.data, res.action)
             if res then
                 if bit.band(res.action, 1) ~= 0 then
                     dlt.flush(user)

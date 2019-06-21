@@ -2,28 +2,36 @@ local codec = {
     mark1 = '[Dwarlorahe] ',
     alliance = {
         lips = {
-            'An', 'Ko', 'Lo', 'Lu', 'Me', 'Ne', 'Re', 'Ru', 'Se', 'Ti', 'Va',
-            'Ve', 'Ash', 'Bor', 'Bur', 'Far', 'Gol', 'Hir', 'Lon', 'Mod', 'Nud',
-            'Ras', 'Ver', 'Vil', 'Vos', 'A', 'E', 'I', 'O', 'U', 'Y', 'Ador',
-            'Agol', 'Dana', 'Goth', 'Lars', 'Noth', 'Nuff'
+            'no', 'ok', 'on', 'cm', 'pc', 're', 'yo', 'to', 'or', 'ya', 'do',
+            'tv', 'ame', 'mad', 'wet', 'may', 'age', 'you', 'off', 'pie', 'pop',
+            'old', 'kid', 'not', 'lot', 'p', 'm', 'f', 'o', 'kill', 'kilo',
+            'kind', 'move', 'joys', 'kiss', 'moon', 'ploy', 'next', 'jump',
+            'july', 'odds', 'plus', 'kick'
         },
         ears = {
-            'G', 'O', 'L', 'A', 'N', 'Ha', 'Gi', 'Mu', 'HA', 'GI', 'Ka', 'No',
-            'Ko', 'KA', 'NO', 'KO'
-        }
+            'ko', 'no', 'gi', 'ag', 'ka', 'ha', 'mu', 'il', 'tar', 'aaz', 'ruk',
+            'gul', 'kek', 'mog', 'ogg', 'kaz', 'zug', 'kil', 'lok', 'nuk', 'o',
+            'a', 'g', 'l', 'n', 'dogg', 'maka', 'grom', 'maza', 'uruk', 'nogu',
+            'rega', 'tago', 'thok', 'gesh', 'kagg', 'zaga', 'ogar'
+        },
+        eardrum = "Kazum'nobu"
     },
 
     horde = {
         lips = {
-            'An', 'Ko', 'Lo', 'Lu', 'Me', 'Ne', 'Re', 'Ru', 'Se', 'Ti', 'Va',
-            'Ve', 'Ash', 'Bor', 'Bur', 'Far', 'Gol', 'Hir', 'Lon', 'Mod', 'Nud',
-            'Ras', 'Ver', 'Vil', 'Vos', 'A', 'E', 'I', 'O', 'U', 'Y', 'Ador',
-            'Agol', 'Dana', 'Goth', 'Lars', 'Noth', 'Nuff'
+            'no', 'ok', 'on', 'cm', 'jo', 'is', 'hi', 'do', 'win', 'pet', 'ios',
+            'may', 'all', 'mag', 'lbs', 'joy', 'lay', 'job', 'who', 'law', 'e',
+            'f', 'a', 'o', 's', 'kiki', 'whoa', 'joke', 'kite', 'keys', 'most',
+            'kiss', 'moss', 'wick', 'zone', 'oryx', 'ache', 'kids'
         },
         ears = {
-            'Y', 'O', 'U', 'E', 'Ti', 'Me', 'TI', 'ME', 'Lo', 'Ve', 'An', 'Se',
-            'LO', 'VE', 'AN', 'SE'
-        }
+            'ti', 'me', 'va', 'lo', 'se', 'ne', 're', 'ko', 've', 'an', 'ru',
+            'lu', 'vil', 'hir', 'lon', 'mod', 'nud', 'bur', 'gol', 'far', 'ras',
+            'wos', 'ver', 'bor', 'ash', 'u', 'o', 'e', 'y', 'agol', 'nuff',
+            'lars', 'ruff', 'thor', 'ador', 'uden', 'odes', 'veld', 'noth',
+            'dana', 'vohl', 'vrum', 'goth'
+        },
+        eardrum = 'Falhedring'
     },
 
     _genTable = function(set)
@@ -161,31 +169,32 @@ local codec = {
 
     init = function(self, faction, oppositeLang)
         -- print(self, faction, oppositeLang)
-        self.mark2 = '[' .. oppositeLang .. '] '
         self.lips = self._genTable(self[faction].lips)
-        self.ears = self._genTable(self[faction].lips)
-        -- for k, v in pairs(self.lips) do self.lips[v] = k end
-        -- for k, v in pairs(self.ears) do self.ears[v] = k end
+        self.ears = self._genTable(self[faction].ears)
+        self.mark2 = '[' .. oppositeLang .. '] ' .. self[faction].eardrum
 
         print('b256 inited')
-        -- for k, v in pairs(self.lips) do
-        --     print(string.format('%s=%s', k, v))
-        -- end
     end,
 
     dec = function(self, msg)
         local lut
-
-        if msg:find(self.mark1) then
-            lut = self.lips
-        elseif msg:find(self.mark2) then
-            lut = self.ears
+        local check = function(h, s)
+            if s:sub(1, h:len()) == h then
+                return s:sub(h:len() + 1, -1)
+            end
         end
 
-        if not lut then return nil end
+        local s1, s2 = check(self.mark1, msg), check(self.mark2, msg)
 
-        -- remove mark
-        msg = msg:gsub('%S+', '', 1)
+        if s1 then
+            lut = self.lips
+            msg = s1
+        elseif s2 then
+            lut = self.ears
+            msg = s2
+        else
+            return nil
+        end
 
         local use16
         if msg:find(lut[self._u16mark]) then
