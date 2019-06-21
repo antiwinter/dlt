@@ -2857,7 +2857,7 @@ function string.diff(str1, str2)
     return matrix[len1][len2]
 end
 
-dltRaw = {
+local codec = {
     rset = {},
     alliance = {
         U = 'P',
@@ -3133,3 +3133,5 @@ dltRaw = {
     end
 
 }
+
+dlt.codec:register('raw', codec)

@@ -1,6 +1,4 @@
-print('in b256 ???')
-
-dltB256 = {
+local codec = {
     mark1 = '[Dwarlorahe] ',
     alliance = {
         lips = {
@@ -74,6 +72,7 @@ dltB256 = {
         end
 
         -- round 3: fill 78, 159 with 2~3 letters
+        fill(32, 32, 31)
         fill(78, 159, 31)
         -- round 4: fill the rest with what ever
         fill(0, 260, 38)
@@ -263,4 +262,4 @@ dltB256 = {
     end
 }
 
-print('???')
+dlt.codec:register('b256', codec)

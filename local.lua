@@ -1,5 +1,9 @@
-if (GetLocale() == "zhCN") then
-    dltLocal = {common = '通用语', orcish = '兽人语'}
+local loc, data = GetLocale()
+
+if (loc == 'zhCN') then
+    data = {common = '通用语', orcish = '兽人语'}
 else
-    dltLocal = {common = 'Common', orcish = 'Orcish'}
+    data = {common = 'Common', orcish = 'Orcish'}
 end
+
+dlt.loc = data

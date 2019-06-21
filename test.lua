@@ -32,9 +32,14 @@ function SendChatMessage(msg)
     ChatFrame_OnEvent(nil, 'CHAT_MSG_SAY', msg, 'antiwinter')
 end
 
-require 'dict'
+require 'dict/data'
+require 'dict/test'
+require 'dlt'
+
+require 'codec/index'
 require 'codec/raw'
 require 'codec/b256'
+
 require 'local'
 require 'main'
 

@@ -1,4 +1,4 @@
-dltB16 = {
+local codec = {
     mark1 = '[Dwarlorahe]',
     alliance = {
         lips = {
@@ -117,4 +117,4 @@ dltB16 = {
     end
 }
 
-
+dlt.codec:register('b16', codec)

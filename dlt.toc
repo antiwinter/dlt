@@ -3,9 +3,18 @@
 ## Notes: Let's talk in Dwarlorahe ~
 ## Author: antiwinter
 
-dict-data.lua
-dict.lua
-codec/raw.lua
+
+dict/data.lua
+dict/test.lua
+dlt.lua
+
+## register codecs
+codec/index.lua
 codec/b256.lua
+codec/raw.lua
+
+## register local
 local.lua
+
+## main
 main.lua
