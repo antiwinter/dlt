@@ -3057,8 +3057,9 @@ local codec = {
         local s = seg:sub(1, 3)
         local s1, s2, s3 = s:sub(1, 1), s:sub(2, 2), s:sub(3, 3)
         local ss1, ss2 = s:sub(1, 2), s:sub(2, 3)
+        local cut = 3
 
-        if (n0 < 0.2) then return s0, '' end
+        if (n0 < 0.1) then return s0, '' end
 
         local n, n1, n2, n3, nn1, nn2
         s, n = self:match(s)
@@ -3069,22 +3070,25 @@ local codec = {
         ss2, nn2 = self:match(ss2)
 
         if n1 + n2 + n3 < n then
-            s = s1 .. ' ' .. s2 .. ' ' .. s3
+            s = s1
             n = n1 + n2 + n3
+            cut = 1
         end
 
         if nn1 + n3 < n then
-            s = ss1 .. ' ' .. s3
+            s = ss1
             n = nn1 + n3
+            cut = 2
         end
 
         if n1 + nn2 < n then
-            s = s1 .. ' ' .. ss2
+            s = s1
             n = n1 + nn2
+            cut = 1
         end
 
         -- print(s, 'distance', n)
-        return s, seg:sub(4, -1)
+        return s, seg:sub(cut + 1, -1)
     end,
 
     init = function(self, faction, oppositeLang)

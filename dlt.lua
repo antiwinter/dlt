@@ -55,7 +55,7 @@ dlt = {
                     dlt.flush(user)
                 end
 
-                if dlt.mask then return end
+                if dlt.mask and res.data:len() > 2 then return end
             end
         end
 
