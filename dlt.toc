@@ -4,8 +4,8 @@
 ## Author: antiwinter
 
 
-dict/data.lua
-dict/test.lua
+## dict/data.lua
+## dict/test.lua
 dlt.lua
 
 ## register codecs
