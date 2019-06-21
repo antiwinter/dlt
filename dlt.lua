@@ -6,14 +6,15 @@ dlt = {
     codec = nil,
     mask = 1,
 
-    rgb = function(x, s)
-        return s
-        --  return string.format('|c%08x%s|r', x, s) 
+    rgb = function(c, s)
+
+        -- return s
+        return string.format('|cff%06x%s|r', c, s)
     end,
 
     log = function(msg)
-        ChatFrame1:AddMessage(dlt.rgb(0x6666aa00, '[Ð] ') ..
-                                  dlt.rgb(0xaaaa6600, msg))
+        ChatFrame1:AddMessage(dlt.rgb(0xffc1a3, '[ф] ') ..
+                                  dlt.rgb(0xffc1a3, msg))
     end,
 
     msg = function(user, msg)
@@ -75,7 +76,7 @@ dlt = {
             dlt.mask = not dlt.mask
             dlt.log(string.format('DLT mask is %s', dlt.mask and 'On' or 'Off'))
         elseif cmd == 'test' then
-            print(string.format('testing %d/%d', dict.cursor, dict.n))
+            -- print(string.format('testing %d/%d', dict.cursor, dict.n))
             dlt.say(dict.get())
         elseif cmd == 'back' then
             dict.back()
@@ -101,6 +102,7 @@ dlt = {
         end
 
         dlt.codec:init(faction, oppositeLang)
-        print('dlt inited')
+        dlt.log(string.format('Dwarf love tauren 2.0, your faction is %s',
+                              faction))
     end
 }

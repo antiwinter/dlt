@@ -171,14 +171,13 @@ local codec = {
         -- print(self, faction, oppositeLang)
         self.lips = self._genTable(self[faction].lips)
         self.ears = self._genTable(self[faction].ears)
-        self.mark2 = '[' .. oppositeLang .. '] ' .. self[faction].eardrum
-
-        print('b256 inited')
+        self.mark2 = self[faction].eardrum
     end,
 
     dec = function(self, msg)
         local lut
         local check = function(h, s)
+            while s:byte(1) == 32 do s = s:sub(2, -1) end
             if s:sub(1, h:len()) == h then
                 return s:sub(h:len() + 1, -1)
             end
