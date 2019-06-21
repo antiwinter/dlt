@@ -1,6 +1,6 @@
 dlt = {
     _event = ChatFrame_OnEvent,
-    lang = '',
+    lang = nil,
     cache = {},
     mode = 'raw',
     codec = nil,
@@ -40,7 +40,22 @@ dlt = {
 
     filter = function(...)
         local _, event, msg, user = ...
-        if event == 'CHAT_MSG_SAY' then
+
+        if not dlt.lang and event == 'PLAYER_ENTERING_WORLD' then
+
+            dlt.lang = GetDefaultLanguage('player')
+            local faction = 'horde'
+            local oppositeLang = dlt.loc.common
+            print(dlt.lang, dlt.loc.common)
+            if dlt.lang == dlt.loc.common then
+                faction = 'alliance'
+                oppositeLang = dlt.loc.orcish
+            end
+            dlt.codec:init(faction, oppositeLang)
+            dlt.log(string.format('[Dwarlorahe] Dwarf love Tauren 2.0 (%s)',
+                                  faction))
+
+        elseif event == 'CHAT_MSG_SAY' then
 
             -- for k, v in pairs({...}) do print(k, v) end
 
@@ -75,11 +90,11 @@ dlt = {
         elseif cmd == 'mask' then
             dlt.mask = not dlt.mask
             dlt.log(string.format('DLT mask is %s', dlt.mask and 'On' or 'Off'))
-        -- elseif cmd == 'test' then
-        --     -- print(string.format('testing %d/%d', dict.cursor, dict.n))
-        --     dlt.say(dict.get())
-        -- elseif cmd == 'back' then
-        --     dict.back()
+            -- elseif cmd == 'test' then
+            --     -- print(string.format('testing %d/%d', dict.cursor, dict.n))
+            --     dlt.say(dict.get())
+            -- elseif cmd == 'back' then
+            --     dict.back()
         else
             local _, s
             for _, s in pairs(dlt.codec:enc(dlt.mode, cmd)) do
@@ -92,17 +107,5 @@ dlt = {
         ChatFrame_OnEvent = dlt.filter
         SlashCmdList['DLT'] = dlt.cli
         SLASH_DLT1 = '/dlt'
-
-        dlt.lang = GetDefaultLanguage('player')
-        local faction = 'horde'
-        local oppositeLang = dlt.loc.common
-        if dlt.lang == dlt.loc.common then
-            faction = 'alliance'
-            oppositeLang = dlt.loc.orcish
-        end
-
-        dlt.codec:init(faction, oppositeLang)
-        dlt.log(
-            string.format('[Dwarlorahe] Dwarf love Tauren 2.0 (%s)', faction))
     end
 }
