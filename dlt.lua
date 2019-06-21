@@ -46,7 +46,7 @@ dlt = {
             dlt.lang = GetDefaultLanguage('player')
             local faction = 'horde'
             local oppositeLang = dlt.loc.common
-            print(dlt.lang, dlt.loc.common)
+            -- print(dlt.lang, dlt.loc.common)
             if dlt.lang == dlt.loc.common then
                 faction = 'alliance'
                 oppositeLang = dlt.loc.orcish
