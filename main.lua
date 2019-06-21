@@ -1,2 +1,2 @@
 dlt.init()
-dict.init()
+-- dict.init()

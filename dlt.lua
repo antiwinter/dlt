@@ -75,11 +75,11 @@ dlt = {
         elseif cmd == 'mask' then
             dlt.mask = not dlt.mask
             dlt.log(string.format('DLT mask is %s', dlt.mask and 'On' or 'Off'))
-        elseif cmd == 'test' then
-            -- print(string.format('testing %d/%d', dict.cursor, dict.n))
-            dlt.say(dict.get())
-        elseif cmd == 'back' then
-            dict.back()
+        -- elseif cmd == 'test' then
+        --     -- print(string.format('testing %d/%d', dict.cursor, dict.n))
+        --     dlt.say(dict.get())
+        -- elseif cmd == 'back' then
+        --     dict.back()
         else
             local _, s
             for _, s in pairs(dlt.codec:enc(dlt.mode, cmd)) do
