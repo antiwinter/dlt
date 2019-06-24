@@ -25,15 +25,17 @@ function GetDefaultLanguage() return 'Common' end
 function GetLocale() return 'enUS' end
 
 function ChatFrame_OnEvent(a, event, msg, user)
-    ChatFrame1:AddMessage('[' .. user .. '] says: ' .. msg)
+    if event == 'CHAT_MSG_SAY' then
+        ChatFrame1:AddMessage('[' .. user .. '] says: ' .. msg)
+    end
 end
 
 function SendChatMessage(msg)
     ChatFrame_OnEvent(nil, 'CHAT_MSG_SAY', msg, 'antiwinter')
 end
 
-require 'dict/data'
-require 'dict/test'
+-- require 'dict/data'
+-- require 'dict/test'
 require 'dlt'
 
 require 'codec/index'
@@ -44,6 +46,7 @@ require 'local'
 require 'main'
 
 -- begin test
+ChatFrame_OnEvent(nil, 'PLAYER_ENTERING_WORLD')
 
 dlt.cli('mask')
 data = {
