@@ -1,10 +1,10 @@
 dlt = {
-    _event = ChatFrame_OnEvent,
     lang = nil,
     cache = {},
     mode = 'raw',
     codec = nil,
     mask = 1,
+    frame = CreateFrame("Frame"),
 
     rgb = function(c, s)
 
@@ -38,44 +38,19 @@ dlt = {
         end
     end,
 
-    filter = function(...)
-        local _, event, msg, user = ...
+    filter = function(_, event, msg, user, ...)
+        local res = dlt.codec:dec(msg)
+        -- print('filter got', res.data, res.action)
+        if res then
+            if bit.band(res.action, 1) ~= 0 then dlt.flush(user) end
 
-        if not dlt.lang and event == 'PLAYER_ENTERING_WORLD' then
+            dlt.queue(user, res.data)
+            if bit.band(res.action, 2) ~= 0 then dlt.flush(user) end
 
-            dlt.lang = GetDefaultLanguage('player')
-            local faction = 'horde'
-            local oppositeLang = dlt.loc.common
-            -- print(dlt.lang, dlt.loc.common)
-            if dlt.lang == dlt.loc.common then
-                faction = 'alliance'
-                oppositeLang = dlt.loc.orcish
-            end
-            dlt.codec:init(faction, oppositeLang)
-            dlt.log(string.format('[Dwarlorahe] Dwarf love Tauren 2.0 (%s)',
-                                  faction))
-
-        elseif event == 'CHAT_MSG_SAY' then
-
-            -- for k, v in pairs({...}) do print(k, v) end
-
-            local res = dlt.codec:dec(msg)
-            -- print('filter got', res.data, res.action)
-            if res then
-                if bit.band(res.action, 1) ~= 0 then
-                    dlt.flush(user)
-                end
-
-                dlt.queue(user, res.data)
-                if bit.band(res.action, 2) ~= 0 then
-                    dlt.flush(user)
-                end
-
-                if dlt.mask and res.data:len() > 2 then return end
-            end
+            if dlt.mask and res.data:len() > 2 then return true end
         end
 
-        dlt._event(...)
+        return false, msg, user, ...
     end,
 
     say = function(msg) SendChatMessage(msg, 'say', dlt.lang) end,
@@ -104,8 +79,27 @@ dlt = {
     end,
 
     init = function()
-        ChatFrame_OnEvent = dlt.filter
+        ChatFrame_AddMessageEventFilter('CHAT_MSG_SAY', dlt.filter)
         SlashCmdList['DLT'] = dlt.cli
         SLASH_DLT1 = '/dlt'
+
+        dlt.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+        dlt.frame:SetScript("OnEvent", function(_, event, ...)
+            if not dlt.lang then
+
+                dlt.lang = GetDefaultLanguage('player')
+                local faction = 'horde'
+                local oppositeLang = dlt.loc.common
+                -- print(dlt.lang, dlt.loc.common)
+                if dlt.lang == dlt.loc.common then
+                    faction = 'alliance'
+                    oppositeLang = dlt.loc.orcish
+                end
+                dlt.codec:init(faction, oppositeLang)
+                dlt.log(string.format('[Dwarlorahe] Dwarf love Tauren 2.0 (%s)',
+                                      faction))
+            end
+            return false, ...
+        end)
     end
 }
