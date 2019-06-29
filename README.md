@@ -1,6 +1,6 @@
 # Dwarf love Tauren
 
-Dwarf love Tauren, or **DLT**, enables you to communicate between Alliane and Horde. **DLT** has two work modes: _**raw**_ and _**b256**_.
+Dwarf love Tauren, or **DLT**, enables you to communicate between Alliance and Horde. **DLT** has two work modes: _**raw**_ and _**b256**_.
 
 ![](https://raw.githubusercontent.com/antiwinter/scrap/master/dlt/scenario.gif)
 
@@ -11,7 +11,7 @@ In **raw** mode, you don't require the opposite faction players also installing 
 
 The picture below describes what each kind of player see:
 
-![](https://raw.githubusercontent.com/antiwinter/scrap/master/dlt/raw_en.jpg)
+![](https://github.com/antiwinter/scrap/raw/master/dlt/raw_en.jpg)
 
 ## **b256** mode
 
@@ -19,7 +19,7 @@ In **b256** mode, you require the opposite faction players also have **DLT** ins
 
 The picture below describes what each kind of player see:
 
-![](https://raw.githubusercontent.com/antiwinter/scrap/master/dlt/b256_en.jpg)
+![](https://github.com/antiwinter/scrap/raw/master/dlt/b256_en.jpg)
 
 ## 1 Install
 
@@ -37,7 +37,7 @@ wowa add antiwinter/dlt
 
 ```
 /dlt hello
-/dlt what ever you wanna say
+/dlt whatever you wanna say
 ```
 
 ### 2.2 Switching mode
