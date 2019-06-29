@@ -47,7 +47,7 @@ dlt = {
             dlt.queue(user, res.data)
             if bit.band(res.action, 2) ~= 0 then dlt.flush(user) end
 
-            if dlt.mask and res.data:len() > 2 then return true end
+            if dlt.mask then return true end
         end
 
         return false, msg, user, ...
