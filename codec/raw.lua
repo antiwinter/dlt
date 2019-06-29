@@ -3105,12 +3105,12 @@ local codec = {
     dec = function(self, msg)
         local d, w = ''
         for w in msg:gmatch('%S+') do
-            if w == '¬' then return d end
             if self.rset[w] == nil then return nil end
             d = d .. self.rset[w] .. ' '
         end
 
-        return nil
+        d = d:sub(1, -2)
+        return d == '' and nil or {action = 3, data = d}
     end,
 
     enc = function(self, msg)
@@ -3128,12 +3128,12 @@ local codec = {
             _d = _d .. d -- connect words
 
             if _d:len() > 200 then
-                table.insert(res, _d .. '¬')
+                table.insert(res, _d:sub(1, -2))
                 _d = ''
             end
         end
 
-        if _d ~= '' then table.insert(res, _d .. '¬') end
+        if _d ~= '' then table.insert(res, _d:sub(1, -2)) end
 
         -- print('raw encoded', res.data)
         return res
